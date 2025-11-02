@@ -1,34 +1,32 @@
-# Vex 介绍
+# Vex Introduction
 
-Vex 是一款 QEMU 辅助命令行工具，核心解决三大痛点：简化复杂的 QEMU 启动参数、降低 QEMU 学习与使用门槛、支持配置文件远程分发。
+Vex is a QEMU auxiliary command-line tool that addresses three core pain points: simplifying complex QEMU startup parameters, lowering the learning and usage barrier for QEMU, and supporting remote distribution of configuration files.
 
-它能实现类 Docker 的便捷体验，帮助用户快速启动全系统仿真环境，适配嵌入式开发、固件开发、操作系统开发等场景。
+It provides a Docker-like convenient experience, helping users quickly launch full-system simulation environments, suitable for embedded development, firmware development, operating system development, and other scenarios.
 
-# 路线图
+# Roadmap
 
-## 第一阶段：搭建基础命令能力
+## Phase 1: Building Basic Command Capabilities
 
-聚焦核心功能，实现 QEMU 配置的本地管理，满足快速启动需求。
+Focus on core functionality, implementing local management of QEMU configurations to meet rapid startup requirements.
 
-- 保存配置: `vex save <name> [-y] [-d "desc"] <qemu-bin> [qemu args ...]` —— 保存 QEMU 启动参数为配置，省去重复输入，可覆盖已有 name，但会提示，-y 强制覆盖，可以在 name 后面输入这个配置的描述（可选项），用双引号识别；
-- 重命名配置：`vex rename [-y] [-d "desc"] <old_name> <new_name>` —— 重命名已保存的配置，保持名称的唯一性与可读性；
-- 执行配置: `vex exec <name>` —— 直接执行已保存的配置，一键启动 QEMU；
-- 查看配置：`vex list` —— 列出已保存的配置；
-- 删除配置: `vex rm <name>` —— 删除无用配置，保持本地环境整洁。
-  
-## 第二阶段：实现配置远程分发
+- Save configuration: `vex save <name> [-y] [-d "desc"] <qemu-bin> [qemu args ...]` —— Save QEMU startup parameters as configurations, eliminating repetitive input. Can overwrite existing names with prompts, -y forces overwrite, and you can add a description for the configuration (optional) using double quotes;
+- Rename configuration: `vex rename [-y] [-d "desc"] <old_name> <new_name>` —— Rename saved configurations, maintaining name uniqueness and readability;
+- Execute configuration: `vex exec <name>` —— Directly execute saved configurations, one-click QEMU startup;
+- View configurations: `vex list` —— List all saved configurations;
+- Delete configuration: `vex rm <name>` —— Remove unused configurations, keeping the local environment clean.
 
-打通配置共享链路，支持团队协作与跨环境复用。利用 github 仓库进行资源托管，用户可上传 / 下载镜像、固件等文件，支持版本管理与标签分类。
+## Phase 2: Implementing Remote Configuration Distribution
 
-- 拉取配置: `vex pull <id/name>:[tag]` —— 从远端拉取他人分享的配置，快速复用成熟环境；
-- 推送配置: `vex push <id/remote_name>:[tag] <local_name>` —— 将本地配置推送到远端，方便团队共享或跨设备使用。
+Establish configuration sharing channels, supporting team collaboration and cross-environment reuse. Utilize GitHub repositories for resource hosting, allowing users to upload/download images, firmware files, etc., with version management and tag classification support.
 
+- Pull configuration: `vex pull <id/name>:[tag]` —— Pull configurations shared by others from remote sources, quickly reusing mature environments;
+- Push configuration: `vex push <id/remote_name>:[tag] <local_name>` —— Push local configurations to remote sources, facilitating team sharing or cross-device usage.
 
+## Phase 3: Supporting Configuration-Associated Images and Firmware, Providing Vex Hub
 
-## 第三阶段：支持配置关联镜像与固件，提供 Vex Hub
+Complete the "configuration + resources" full pipeline, solving the scattered management issues of images/firmware, and building a complete Vex ecosystem.
 
-打通 “配置 + 资源” 全链路，解决镜像 / 固件管理分散问题，构建完整的 Vex 生态。
+Configuration resource association: Support binding specified image files (such as system images) and firmware files in Vex configurations. When executing the exec command, resources are automatically loaded without manual path specification.
 
-配置关联资源：支持在 Vex 配置中绑定指定的镜像文件（如系统镜像）与固件文件，执行 exec 命令时自动加载，无需手动指定路径。
-
-推出 Vex Hub：打造官方的资源与配置展示平台，提供丰富和热门的仿真平台环境搭建方案。在 Hub 中可直接获取 “配置 + 关联资源” 的完整套餐，一键拉取并启动仿真环境，无需单独准备文件。
+Launch Vex Hub: Create an official resource and configuration display platform, providing rich and popular simulation platform environment setup solutions. In the Hub, users can directly obtain complete "configuration + associated resources" packages, with one-click pull and launch of simulation environments, eliminating the need for separate file preparation.
