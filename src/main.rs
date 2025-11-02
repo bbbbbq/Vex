@@ -34,6 +34,10 @@ enum Vex {
     Exec {
         /// Name of the configuration to execute
         name: String,
+
+        /// Enable debug mode (adds -s -S parameters for GDB debugging)
+        #[arg(short = 'd')]
+        debug: bool,
     },
 
     /// Delete a saved QEMU configuration
@@ -152,9 +156,38 @@ fn main() -> Result<()> {
             qemu_args,
         } => {
             let config_path = config_file(&name)?;
+            
+            // Check if debug parameters -s or -S are present
+            let has_debug_args = qemu_args.iter().any(|arg| arg == "-s" || arg == "-S");
+            
+            let mut final_args = qemu_args.clone();
+            
+            if has_debug_args {
+                println!("Debug parameters '-s' or '-S' detected in startup arguments");
+                println!("These parameters are used to start GDB debugging server, but saving them to configuration may not be the best practice.");
+                println!("Suggestion: Skip saving these parameters and use 'vex exec -d' to start remote debugging mode");
+                println!("Skip saving debug parameters and use exec -d for remote debugging? [Y/n]");
+                
+                let mut input = String::new();
+                std::io::stdin().read_line(&mut input)?;
+                let input = input.trim().to_lowercase();
+                
+                if input.is_empty() || input == "y" || input == "yes" {
+                    // User chose to skip debug parameters
+                    final_args = qemu_args.iter()
+                        .filter(|&arg| arg != "-s" && arg != "-S")
+                        .cloned()
+                        .collect();
+                    println!("Debug parameters have been skipped, saved configuration will not include -s or -S parameters");
+                    println!("To start debugging mode, use: vex exec -d {}", name);
+                } else {
+                    println!("Debug parameters will be included in the saved configuration");
+                }
+            }
+
             let config = QemuConfig {
                 qemu_bin: qemu_bin.clone(),
-                args: qemu_args.clone(),
+                args: final_args,
                 desc,
             };
 
@@ -179,7 +212,7 @@ fn main() -> Result<()> {
             }
         }
 
-        Vex::Exec { name } => {
+        Vex::Exec { name, debug } => {
             let config_path = config_file(&name)?;
             if !config_path.exists() {
                 anyhow::bail!("Configuration '{}' does not exist. Create it first with 'vex save'", name);
@@ -188,14 +221,28 @@ fn main() -> Result<()> {
             let config_json = fs::read_to_string(&config_path).context("Failed to read config file")?;
             let config: QemuConfig = serde_json::from_str(&config_json).context("Failed to deserialize configuration")?;
 
-            if let Some(desc) = &config.desc {
-                println!("Starting configuration '{}' ({}): {} {:?}", name, desc, config.qemu_bin, config.args);
+            let mut exec_args = config.args.clone();
+            
+            if debug {
+                // Add debug parameters
+                exec_args.push("-s".to_string());
+                exec_args.push("-S".to_string());
+                if let Some(desc) = &config.desc {
+                    println!("Starting configuration '{}' ({}) in DEBUG mode: {} {:?}", name, desc, config.qemu_bin, exec_args);
+                } else {
+                    println!("Starting configuration '{}' in DEBUG mode: {} {:?}", name, config.qemu_bin, exec_args);
+                }
+                println!("GDB debugging server started, you can connect to localhost:1234 using gdb");
             } else {
-                println!("Starting configuration '{}': {} {:?}", name, config.qemu_bin, config.args);
+                if let Some(desc) = &config.desc {
+                    println!("Starting configuration '{}' ({}): {} {:?}", name, desc, config.qemu_bin, exec_args);
+                } else {
+                    println!("Starting configuration '{}': {} {:?}", name, config.qemu_bin, exec_args);
+                }
             }
             
             let status = Command::new(&config.qemu_bin)
-                .args(&config.args)
+                .args(&exec_args)
                 .status()
                 .with_context(|| format!("Failed to execute QEMU: {}", config.qemu_bin))?;
 
