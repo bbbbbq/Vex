@@ -10,7 +10,8 @@ Vex 是一款 QEMU 辅助命令行工具，核心解决三大痛点：简化复�
 
 聚焦核心功能，实现 QEMU 配置的本地管理，满足快速启动需求。
 
-- 保存配置: `vex save <-y> <name> ["desc"] <qemu-bin> [qemu args ...]` —— 保存 QEMU 启动参数为配置，省去重复输入，可覆盖已有 name，但会提示，-y 强制覆盖，可以在 name 后面输入这个配置的描述（可选项），用双引号识别；
+- 保存配置: `vex save <name> [-y] [-d "desc"] <qemu-bin> [qemu args ...]` —— 保存 QEMU 启动参数为配置，省去重复输入，可覆盖已有 name，但会提示，-y 强制覆盖，可以在 name 后面输入这个配置的描述（可选项），用双引号识别；
+- 重命名配置：`vex rename [-y] [-d "desc"] <old_name> <new_name>` —— 重命名已保存的配置，保持名称的唯一性与可读性；
 - 执行配置: `vex exec <name>` —— 直接执行已保存的配置，一键启动 QEMU；
 - 查看配置：`vex list` —— 列出已保存的配置；
 - 删除配置: `vex rm <name>` —— 删除无用配置，保持本地环境整洁。
