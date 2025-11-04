@@ -54,6 +54,9 @@ pub struct ExecArgs {
 
     #[arg(short = 'd', long = "debug", help = "Start QEMU in debug mode (GDB server on port 1234)")]
     pub debug: bool,
+
+    #[arg(short = 'f', long = "full", help = "Show full QEMU command line arguments")]
+    pub full: bool,
 }
 
 #[derive(Parser)]

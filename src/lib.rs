@@ -14,7 +14,7 @@ use commands::{exec_command, list_command, remove_command, rename_command, save_
 pub fn run() -> Result<()> {
     let vex = Vex::parse();
     match vex {
-        Vex::Exec(args) => exec_command(args.name, args.debug),
+        Vex::Exec(args) => exec_command(args.name, args.debug, args.full),
         Vex::List(_) => list_command(),
         Vex::Rm(args) => remove_command(args.name),
         Vex::Rename(args) => rename_command(args.desc, args.force, args.old_name, args.new_name),
