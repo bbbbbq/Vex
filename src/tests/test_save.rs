@@ -16,7 +16,7 @@ fn test_save_basic_config() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["save", "my-vm", "qemu-system-x86_64", "-m", "2G"])
+        .args(["save", "my-vm", "qemu-system-x86_64", "-m", "2G"])
         .output()
         .unwrap();
 
@@ -44,7 +44,7 @@ fn test_save_with_description() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&[
+        .args([
             "save",
             "ubuntu-dev",
             "-d",
@@ -79,7 +79,7 @@ fn test_save_missing_qemu_binary() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["save", "test-vm"])
+        .args(["save", "test-vm"])
         .output()
         .unwrap();
 
@@ -104,7 +104,7 @@ fn test_save_complex_arguments() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&[
+        .args([
             "save",
             "complex-vm",
             "qemu-system-x86_64",
@@ -143,7 +143,7 @@ fn test_save_multiple_configs() {
         vex_bin
             .command()
             .env("VEX_CONFIG_DIR", &config_dir)
-            .args(&["save", name, "qemu-system-x86_64"])
+            .args(["save", name, "qemu-system-x86_64"])
             .output()
             .unwrap();
     }
