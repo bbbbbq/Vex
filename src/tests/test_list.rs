@@ -41,7 +41,7 @@ fn test_list_single_config() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["save", "test-vm", "qemu-system-x86_64", "-m", "2G"])
+        .args(["save", "test-vm", "qemu-system-x86_64", "-m", "2G"])
         .output()
         .unwrap();
 
@@ -80,7 +80,7 @@ fn test_list_multiple_configs() {
         vex_bin
             .command()
             .env("VEX_CONFIG_DIR", &config_dir)
-            .args(&["save", name, "-d", desc, qemu_bin])
+            .args(["save", name, "-d", desc, qemu_bin])
             .output()
             .unwrap();
     }
@@ -116,7 +116,7 @@ fn test_list_shows_descriptions() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&[
+        .args([
             "save",
             "documented-vm",
             "-d",

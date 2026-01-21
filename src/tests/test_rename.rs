@@ -16,14 +16,14 @@ fn test_rename_basic() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["save", "old-name", "qemu-system-x86_64", "-m", "2G"])
+        .args(["save", "old-name", "qemu-system-x86_64", "-m", "2G"])
         .output()
         .unwrap();
 
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["rename", "old-name", "new-name"])
+        .args(["rename", "old-name", "new-name"])
         .output()
         .unwrap();
 
@@ -52,7 +52,7 @@ fn test_rename_nonexistent() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["rename", "nonexistent", "new-name"])
+        .args(["rename", "nonexistent", "new-name"])
         .output()
         .unwrap();
 
@@ -77,7 +77,7 @@ fn test_rename_preserves_description() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&[
+        .args([
             "save",
             "original",
             "-d",
@@ -92,7 +92,7 @@ fn test_rename_preserves_description() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["rename", "original", "renamed"])
+        .args(["rename", "original", "renamed"])
         .output()
         .unwrap();
 

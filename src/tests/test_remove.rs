@@ -16,7 +16,7 @@ fn test_remove_nonexistent_config() {
     let output = vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(&["rm", "nonexistent"])
+        .args(["rm", "nonexistent"])
         .output()
         .unwrap();
 
