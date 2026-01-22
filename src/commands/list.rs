@@ -21,18 +21,18 @@ pub fn list_command() -> Result<()> {
     for entry in entries {
         let entry = entry.context("Failed to read directory entry")?;
         let path = entry.path();
-        if path.extension().map_or(false, |ext| ext == "json") {
-            if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-                match fs::read_to_string(&path) {
-                    Ok(content) => {
-                        if let Ok(config) = serde_json::from_str::<QemuConfig>(&content) {
-                            configs.push((name.to_string(), config));
-                        }
+        if path.extension().is_some_and(|ext| ext == "json")
+            && let Some(name) = path.file_stem().and_then(|s| s.to_str())
+        {
+            match fs::read_to_string(&path) {
+                Ok(content) => {
+                    if let Ok(config) = serde_json::from_str::<QemuConfig>(&content) {
+                        configs.push((name.to_string(), config));
                     }
-                    Err(_) => {
-                        // Skip invalid config files
-                        continue;
-                    }
+                }
+                Err(_) => {
+                    // Skip invalid config files
+                    continue;
                 }
             }
         }
