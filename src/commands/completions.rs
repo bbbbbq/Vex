@@ -40,9 +40,9 @@ fn print_bash_dynamic_completion(bin_name: &str) {
     println!(
         r#"
 # === Dynamic configuration name completion ===
-# Extract configuration names from vex list output
+# Get configuration names using dedicated completion command
 _vex_get_configs() {{
-    {bin_name} list 2>/dev/null | grep ' - ' | awk '{{print $1}}'
+    {bin_name} complete-configs 2>/dev/null
 }}
 
 # Save original completion function
@@ -91,7 +91,7 @@ fn print_zsh_dynamic_completion(bin_name: &str) {
 # === Zsh dynamic configuration name completion ===
 _vex_configs() {{
     local configs
-    configs=($({bin_name} list 2>/dev/null | grep ' - ' | awk '{{print $1}}'))
+    configs=($({bin_name} complete-configs 2>/dev/null))
     _describe 'configurations' configs
 }}
 
@@ -137,7 +137,7 @@ fn print_fish_dynamic_completion(bin_name: &str) {
         r#"
 # === Fish dynamic configuration name completion ===
 function __vex_configs
-    {bin_name} list 2>/dev/null | grep ' - ' | awk '{{print $1}}'
+    {bin_name} complete-configs 2>/dev/null
 end
 
 # Add configuration name completion for exec command

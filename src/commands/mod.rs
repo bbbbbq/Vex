@@ -1,3 +1,4 @@
+pub mod complete_configs;
 pub mod completions;
 pub mod exec;
 pub mod list;
@@ -6,6 +7,7 @@ pub mod remove;
 pub mod rename;
 pub mod save;
 
+pub use complete_configs::{CompleteConfigsArgs, complete_configs_command};
 pub use completions::{CompletionsArgs, completions_command};
 pub use exec::{ExecArgs, exec_command};
 pub use list::{ListArgs, list_command};
@@ -25,6 +27,9 @@ pub enum Commands {
     Print(PrintArgs),
     Exec(ExecArgs),
     Completions(CompletionsArgs),
+    /// Hidden command for shell completion
+    #[clap(hide = true)]
+    CompleteConfigs(CompleteConfigsArgs),
 }
 
 #[derive(Parser)]
