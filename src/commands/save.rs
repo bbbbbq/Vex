@@ -16,13 +16,6 @@ pub struct SaveArgs {
     pub qemu_bin: String,
 
     #[arg(
-        trailing_var_arg = true,
-        allow_hyphen_values = true,
-        help = "QEMU startup arguments"
-    )]
-    pub qemu_args: Vec<String>,
-
-    #[arg(
         short = 'd',
         long = "desc",
         help = "Optional description for the configuration"
@@ -35,6 +28,13 @@ pub struct SaveArgs {
         help = "Force save without confirmation if configuration exists"
     )]
     pub force: bool,
+
+    #[arg(
+        last = true,
+        allow_hyphen_values = true,
+        help = "QEMU startup arguments (after '--')"
+    )]
+    pub qemu_args: Vec<String>,
 }
 
 pub fn save_command(

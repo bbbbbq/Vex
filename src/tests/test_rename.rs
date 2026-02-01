@@ -16,7 +16,7 @@ fn test_rename_basic() {
     vex_bin
         .command()
         .env("VEX_CONFIG_DIR", &config_dir)
-        .args(["save", "old-name", "qemu-system-x86_64", "-m", "2G"])
+        .args(["save", "old-name", "qemu-system-x86_64", "--", "-m", "2G"])
         .output()
         .unwrap();
 
@@ -80,9 +80,10 @@ fn test_rename_preserves_description() {
         .args([
             "save",
             "original",
+            "qemu-system-x86_64",
             "-d",
             "Important configuration",
-            "qemu-system-x86_64",
+            "--",
             "-m",
             "2G",
         ])
