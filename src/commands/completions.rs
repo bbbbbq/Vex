@@ -16,7 +16,7 @@ pub fn completions_command(shell: Shell) -> Result<()> {
     let mut cmd = Cli::command();
     // bin_name = Vex
     let bin_name = cmd.get_name().to_string();
-    println!("Generating completion script for {}", bin_name);
+    eprintln!("Generating completion script for {}", bin_name);
     // Generate base completion script
     generate(shell, &mut cmd, bin_name.clone(), &mut io::stdout());
 
