@@ -3,3 +3,4 @@ pub mod test_list;
 pub mod test_remove;
 pub mod test_rename;
 pub mod test_save;
+pub mod test_version;
