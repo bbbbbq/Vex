@@ -142,9 +142,10 @@ pub(crate) fn substitute_params(args: &[String]) -> Vec<String> {
         .map(|arg| {
             re.replace_all(arg, |caps: &regex::Captures| {
                 let var_name = &caps[1];
-                let value =
-                    std::env::var(var_name).unwrap_or_else(|_| format!("${{{}}}", var_name));
-                escape_shell_metacharacters(&value)
+                match std::env::var(var_name) {
+                    Ok(value) => escape_shell_metacharacters(&value),
+                    Err(_) => format!("${{{}}}", var_name),
+                }
             })
             .to_string()
         })

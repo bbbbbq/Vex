@@ -5,7 +5,10 @@ use std::fs;
 use crate::config::config_dir;
 
 #[derive(Args)]
-#[clap(about = "List config names for shell completion (internal use)", hide = true)]
+#[clap(
+    about = "List config names for shell completion (internal use)",
+    hide = true
+)]
 pub struct CompleteConfigsArgs;
 
 /// Output config names for shell completion, one per line
@@ -19,10 +22,10 @@ pub fn complete_configs_command() -> Result<()> {
 
     for entry in entries.flatten() {
         let path = entry.path();
-        if path.extension().is_some_and(|ext| ext == "json") {
-            if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-                println!("{}", name);
-            }
+        if path.extension().is_some_and(|ext| ext == "json")
+            && let Some(name) = path.file_stem().and_then(|s| s.to_str())
+        {
+            println!("{}", name);
         }
     }
 

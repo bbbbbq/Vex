@@ -21,9 +21,9 @@ pub struct InitArgs {
 }
 
 pub fn init_command(shell: Option<Shell>, print_only: bool) -> Result<()> {
-    let detected_shell = shell.or_else(detect_shell).context(
-        "Could not detect shell type. Please specify with --shell (bash, zsh, fish)",
-    )?;
+    let detected_shell = shell
+        .or_else(detect_shell)
+        .context("Could not detect shell type. Please specify with --shell (bash, zsh, fish)")?;
 
     let config_line = get_completion_line(detected_shell);
 
@@ -35,12 +35,15 @@ pub fn init_command(shell: Option<Shell>, print_only: bool) -> Result<()> {
     let rc_file = get_shell_rc_file(detected_shell)?;
 
     // Check if already configured
-    if let Ok(content) = fs::read_to_string(&rc_file) {
-        if content.contains("vex completions") || content.contains("vex init") {
-            println!("✓ Shell completion for vex is already configured in {:?}", rc_file);
-            println!("  To reconfigure, remove the existing vex completion line first.");
-            return Ok(());
-        }
+    if let Ok(content) = fs::read_to_string(&rc_file)
+        && (content.contains("vex completions") || content.contains("vex init"))
+    {
+        println!(
+            "✓ Shell completion for vex is already configured in {:?}",
+            rc_file
+        );
+        println!("  To reconfigure, remove the existing vex completion line first.");
+        return Ok(());
     }
 
     // Append completion line to rc file

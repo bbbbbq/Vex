@@ -10,11 +10,7 @@ fn test_version_matches_cargo_toml() {
         .run()
         .unwrap();
 
-    let output = vex_bin
-        .command()
-        .arg("--version")
-        .output()
-        .unwrap();
+    let output = vex_bin.command().arg("--version").output().unwrap();
 
     assert!(output.status.success(), "vex --version should succeed");
 
