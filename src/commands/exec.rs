@@ -117,13 +117,34 @@ fn print_startup_message(
     }
 }
 
+/// Shell metacharacters that need to be escaped to prevent command injection
+const SHELL_METACHARACTERS: &[char] = &[
+    ';', '&', '|', '$', '!', '"', '(', ')', '{', '}', '[', ']', '<', '>', '*', '?', '`', '#', '~',
+];
+
+/// Escape shell metacharacters in a string to prevent command injection
+fn escape_shell_metacharacters(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    for c in s.chars() {
+        if SHELL_METACHARACTERS.contains(&c) {
+            result.push('\\');
+        }
+        result.push(c);
+    }
+    result
+}
+
 /// Substitute parameters in arguments using regex
+/// Environment variables are escaped to prevent command injection
 pub(crate) fn substitute_params(args: &[String]) -> Vec<String> {
     let re = Regex::new(r"\$\{([^}]+)\}").unwrap();
     args.iter()
         .map(|arg| {
             re.replace_all(arg, |caps: &regex::Captures| {
-                std::env::var(&caps[1]).unwrap_or_else(|_| format!("${{{}}}", &caps[1]))
+                let var_name = &caps[1];
+                let value =
+                    std::env::var(var_name).unwrap_or_else(|_| format!("${{{}}}", var_name));
+                escape_shell_metacharacters(&value)
             })
             .to_string()
         })
